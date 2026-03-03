@@ -2,19 +2,19 @@
 /// シューティング
 /// 作成日：2026/2/27
 /// メイン関数
-/// フリーサイトでダウンロードしたものをDXLibraryのツールを使ってmv1形式に変換して、やりたい。
+/// プレイヤーの正面方向に三角形を表示。Zバッファを有効にしてみてる
 /// </summary>
 
 #include "DxLib.h"
 #include "math.h"
 #include "GameParameter.h"
 #include "Player.h"
+#include "GameCamera.h"
 #include <memory>
 
 // 初期化処理
 static void Initialize()
 {
-
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -27,8 +27,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (DxLib_Init() == -1) return -1;
 	SetDrawScreen(DX_SCREEN_BACK);
 	SetMouseDispFlag(FALSE); // マウスカーソルを非表示
+	SetUseZBuffer3D(TRUE); // Zバッファを有効にする
+	SetWriteZBuffer3D(TRUE); // Zバッファに書き込む
 
 	auto m_Player =  std::make_unique<Player>(); // プレイヤーの描画
+	auto m_GameCamera = std::make_unique<GameCamera>(); // カメラの描画
 
 	// メインのループ処理
 	//----------------------------------------------------------------
@@ -38,24 +41,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		m_Player->Update(); // プレイヤーの更新
 		m_Player->Draw(); // プレイヤーの描画
+		m_GameCamera->Update(); // カメラの更新
 
-		// 左右キーでカメラの回転値を変更
-		if (CheckHitKey(KEY_INPUT_LEFT) == 1)
-		{
-			Roll -= DX_PI_F / 60.0f;
-		}
-		if (CheckHitKey(KEY_INPUT_RIGHT) == 1)
-		{
-			Roll += DX_PI_F / 60.0f;
-		}
-
-		// カメラ設定
-		SetCameraPositionAndTargetAndUpVec(
-			VGet(0.0f, 400.0f, -1500.0f),
-			VGet(0.0f, 0.0f, 0.0f),
-			VGet(sin(Roll), cos(Roll), 0.0f) // カメラを傾ける
-		);
-
+		DrawSphere3D(VGet(0.0f, 0.0f, -500.0f), 50.0f, 16, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE); // プレイヤーの正面に球を描画)
 		DrawLine3D(VGet(-1000.0f, 0.0f, 0.0f), VGet(1000.0f, 0.0f, 0.0f), GetColor(255, 0, 0)); // X軸を赤で描画
 		ScreenFlip();    // 画面を更新して、少し休む	
 	}
