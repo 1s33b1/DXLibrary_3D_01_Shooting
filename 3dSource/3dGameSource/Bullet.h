@@ -1,0 +1,28 @@
+#pragma once
+#include "DxLib.h"
+
+class Bullet
+{
+public:
+	Bullet(int x, int y,int z);
+	~Bullet();
+	// 更新処理
+	void Update();
+	// 描画処理
+	void Draw();
+	//bool isScreen; // true:画面内にいてるとき
+
+	//int GetPosX() const { return bulletPosx; }
+	//int GetPosY() const { return bulletPosy; }
+	//int GetRadius() const { return bulletRadius; }
+private:
+	//int graphBullet; // 弾丸の画像
+	int color;
+	int playerModel;
+	VECTOR bulletPos; // 弾丸の座標。3D ver
+	MV1_COLL_RESULT_POLY collResult;
+	//int bulletPosx, bulletPosy; // 弾丸の座標
+	//int bulletRadius; // 弾丸の半径
+	//int bulletSpeed; // 弾丸のスピード
+};
+

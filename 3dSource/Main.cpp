@@ -10,6 +10,7 @@
 #include "GameParameter.h"
 #include "Player.h"
 #include "GameCamera.h"
+#include "Bullet.h"
 #include <memory>
 
 // 初期化処理
@@ -19,10 +20,8 @@ static void Initialize()
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	float Roll = 0;
-
-	SetGraphMode(ScreenSettings::screenWidth, ScreenSettings::screenHeight, 30); // 画面のサイズを決定
-	SetWaitVSyncFlag(TRUE); // これを付けるとヌルヌルになりすぎて動作が何もかも早くなるからいったんなしで。
+	SetGraphMode(ScreenSettings::screenWidth, ScreenSettings::screenHeight, ScreenSettings::screenColorBit); // 画面のサイズを決定
+	SetWaitVSyncFlag(TRUE); // 垂直同期を有効にする。本来であればあんまりおすすめされないらしい。	
 	// DXライブラリ初期化処理
 	if (DxLib_Init() == -1) return -1;
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -32,6 +31,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	auto m_Player =  std::make_unique<Player>(); // プレイヤーの描画
 	auto m_GameCamera = std::make_unique<GameCamera>(); // カメラの描画
+	auto m_Bullet = std::make_unique<Bullet>(0, 0, 0); // 弾丸の描画
 
 	// メインのループ処理
 	//----------------------------------------------------------------
@@ -42,8 +42,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		m_Player->Update(); // プレイヤーの更新
 		m_Player->Draw(); // プレイヤーの描画
 		m_GameCamera->Update(); // カメラの更新
+		m_Bullet->Update(); // 弾丸の更新
+		m_Bullet->Draw(); // 弾丸の描画
 
-		DrawSphere3D(VGet(0.0f, 0.0f, -500.0f), 50.0f, 16, GetColor(255, 0, 0), GetColor(255, 0, 0), TRUE); // プレイヤーの正面に球を描画)
 		DrawLine3D(VGet(-1000.0f, 0.0f, 0.0f), VGet(1000.0f, 0.0f, 0.0f), GetColor(255, 0, 0)); // X軸を赤で描画
 		ScreenFlip();    // 画面を更新して、少し休む	
 	}

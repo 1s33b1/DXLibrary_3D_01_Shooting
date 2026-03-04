@@ -1,7 +1,8 @@
 #pragma once
 namespace ScreenSettings {
-	const int screenWidth = 640;
-	const int screenHeight = 480;
+	const int screenWidth = 800;
+	const int screenHeight = 600;
+	const int screenColorBit = 16;
 }
 
 namespace BulletSettings {

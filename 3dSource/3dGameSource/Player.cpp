@@ -11,6 +11,7 @@ Player::Player()
 	m_playerSpeed(5.0f)
 {
 	m_playerModel = MV1LoadModel("Model/CraneoFBX.mv1");// モデルをメモリにロード
+	modelInfo = MV1SetupCollInfo(m_playerModel,0,8,8,8); // モデルの当たり判定を設定
 }
 
 // デストラクタ
@@ -24,6 +25,7 @@ void Player::Update()
 {
 	Move();
 	MV1SetPosition(m_playerModel, m_playerPos); // モデルの位置を更新
+	MV1RefreshCollInfo(m_playerModel); // 当たり判定を更新
 }
 
 // 描画処理
